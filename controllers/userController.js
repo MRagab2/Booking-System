@@ -25,7 +25,7 @@ let addUser = async (userInfo)=>{
     }
 };
 
-let getUserByEmail = async (email, host)=> {
+let getUserByEmail = async (email)=> {
     try{
         let user = await User.findOne({            
             email: email            
@@ -33,7 +33,6 @@ let getUserByEmail = async (email, host)=> {
         if(!user)
             return ('User Not Found');
 
-        user.avatar = `http://${host}/DefaultAvatar_c79088f7100460199fa7.png`
         return user;
     }catch(err){
         console.log(err);
@@ -59,7 +58,7 @@ let getUserByToken = async (token)=> {
 let getUserByID = async (id)=> {
     try{
         let user = await User.findOne({            
-            id: id          
+            _id: id          
         });
         if(!user)
             return ('User Not Found');

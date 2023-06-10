@@ -28,12 +28,12 @@ router.get('/email/:email',
     authenticate,
     async (req,res)=>{
     try{
-        const email = req.params.email;
-        let user = await userController.getUserByEmail(email, req.headers.host);
+        let user = await userController.getUserByEmail(req.params.email);
 
         if(typeof user === 'string') 
             return res.status(404).json(user);
 
+        user.avatar = `${req.protocol}://${req.get('host')}/avatar/${user.avatar}`
         res.status(200).json(user);
     }catch(err){
         console.log(err);
@@ -44,11 +44,11 @@ router.get('/id/:id',
     authenticate,
     async (req,res)=>{
     try{
-        const id = req.params.email;
-        let user = await userController.getUserByID(id);
+        let user = await userController.getUserByID(req.params.id);
         if(typeof user === 'string') 
             return res.status(404).json(user);
 
+        user.avatar = `${req.protocol}://${req.get('host')}/avatar/${user.avatar}`
         res.status(200).json(user);
     }catch(err){
         console.log(err);
