@@ -17,6 +17,9 @@ router.get('/',
             res.status(400).json(users);
 
 /*request details + its review..... */
+        users.map(user =>{
+            user.avatar = `${req.protocol}://${req.get('host')}/avatar/${user.avatar}`
+        });
         res.status(200).send(users);
     }catch(err){ 
         console.log(err)
