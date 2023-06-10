@@ -4,7 +4,7 @@ const path = require("path");
 // CONFIGURATION FOR MULTER
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-      cb(null, '../Front/assets/imgs/avatar/')
+      cb(null, 'public/avatar/')
     },
     filename: function (req, file, cb) {
       cb(null, Date.now() + path.extname(file.originalname));

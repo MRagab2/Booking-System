@@ -1,11 +1,16 @@
 const mongoose = require('mongoose');
 const requestSchema = new mongoose.Schema({
-    date: {
+    day: {
         type: String,
         required: true,
         trim: true
     },
-    time: {
+    startTime: {
+        type: String,
+        required: true,
+        trim: true
+    },
+    endTime: {
         type: String,
         required: true,
         trim: true

@@ -9,11 +9,15 @@ router.post('/',
             validatInput,   
             async(req,res)=>{
     try{
-        let user = await userController.getUserByEmail(req,res);
-        if(!user) return res.status(400).send("User Not Found..");
+        let user = await userController.getUserByEmail(req.body.email);
+        if(!user) 
+            return res.status(400).send("User Not Found..");
         
         let passwordCheck = await bcrypt.compare(req.body.password, user.password);
-        if(!passwordCheck) return res.status(400).send({msg:"Wrong Password"});
+        if(!passwordCheck) 
+            return res.status(400).send({
+                msg:"Wrong Password"
+            });
         
         res.header("authToken",user.token);
         delete user.password;

@@ -16,9 +16,7 @@ app.use(cors({
     credentials: true,
     origin: [
         "http://localhost:3000",
-        "http://localhost:4000",
-        "http://localhost:5500",
-        "http://localhost:5501"
+        "http://localhost:4000"
     ]
 }));
 
@@ -39,6 +37,7 @@ const requestRouter = require('./routes/requestRouter.js');
 const couponRouter = require('./routes/couponRouter.js');
 const feedbackRouter = require('./routes/feedbackRouter.js');
 const announceRouter = require('./routes/announceRouter.js');
+const closeDates = require('./routes/closeDatesRouter.js');
 
 // End Points
 app.use('/register',registerRouter);
@@ -49,7 +48,7 @@ app.use('/request',requestRouter);
 app.use('/coupon',couponRouter);
 app.use('/feedback',feedbackRouter);
 app.use('/announcement',announceRouter);
-
+app.use('/closed',closeDates);
 
 // Run
 app.listen(port,()=>{

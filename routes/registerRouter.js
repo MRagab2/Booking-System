@@ -11,7 +11,20 @@ router.post('/',
     validatInput,   
     checkExistence,
     passConfirm,
-    userController.addUser
+    async (req, res)=>{
+        try{
+            const userInfo = req.body;
+            const user = await userController.addUser(userInfo);
+            if(user.message)
+                res.status(500).send(user.message);
+
+            res.status(200).send(user);
+        }catch(err){
+            console.log(err);
+            res.status(500).send(err);
+        }
+        
+    }
 );
 
 module.exports = router;

@@ -6,81 +6,72 @@ const authorize = require('../middleware/authorization');
 const upload = require('../middleware/uploadAvatar');
 
 const userController = require('../controllers/userController');
-const Request = require('../models/requestModel');
-const Review = require('../models/reviewModel');
-const Feedback = require('../models/feedbackModel');
-// CRUD
+
 router.get('/',
     authenticate,
     // authorize, 
     async (req,res)=>{
     try{
-        let users = await userController.getAllUsers(req,res);
+        let users = await userController.getAllUsers();
+        if(typeof users === 'string')
+            res.status(400).json(users);
 
 /*request details + its review..... */
         res.status(200).send(users);
-    }catch(err){
+    }catch(err){ 
         console.log(err)
         res.status(400).json(err.message);
     }
 });
-/*get 1*/
-router.post('/email',
+
+router.get('/email/:email',
     authenticate,
     async (req,res)=>{
     try{
-        // req.body.email = req.params.email;
-        let user = await userController.getUserByEmail(req,res);
-        if(!user) return res.status(404).json('User Not Found...');
+        const email = req.params.email;
+        let user = await userController.getUserByEmail(email, req.headers.host);
 
-        let request = await Request.findOne({userID:user.id});
-        let review = await Review.findOne({userID:user.id});
-        let feedback = await Feedback.findOne({userID:user.id});
+        if(typeof user === 'string') 
+            return res.status(404).json(user);
 
-        res.status(200).json({
-            user: user,
-            request: request,
-            review: review,
-            feedback: feedback,
-        });
+        res.status(200).json(user);
     }catch(err){
         console.log(err);
         res.status(400).json(err.message);
     }
 });
-router.post('/id',
+router.get('/id/:id',
     authenticate,
     async (req,res)=>{
     try{
-        // req.body.email = req.params.email;
-        let user = await userController.getUserByID(req,res);
-        if(!user) return res.status(404).json('User Not Found...');
+        const id = req.params.email;
+        let user = await userController.getUserByID(id);
+        if(typeof user === 'string') 
+            return res.status(404).json(user);
 
-        let request = await Request.findOne({userID:user.id});
-        let review = await Review.findOne({userID:user.id});
-        let feedback = await Feedback.findOne({userID:user.id});
-
-        res.status(200).json({
-            user: user,
-            request: request,
-            review: review,
-            feedback: feedback,
-        });
+        res.status(200).json(user);
     }catch(err){
         console.log(err);
         res.status(400).json(err.message);
     }
 });
 
-router.put('/email',
+router.put('/:id',
     authenticate,
     upload.single('avatar'),
     async (req,res)=>{
     try{
-        // req.body.email = req.params.email;
-        let user = await userController.updateUser(req,res);
-        if(!user) return res.status(404).send('User Not Found..');
-        if(typeof user === 'string') return res.status(404).send('Error while Update');
+        
+        let user = await userController.updateUser(
+                req.params.id, 
+                req.body, 
+                req.file
+            );
+        if(!user) 
+            return res.status(404).send('User Not Found..');
+
+        if(typeof user === 'string') 
+            return res.status(404).send(user);
         
         res.status(200).send(user);
     }catch(err){
@@ -89,49 +80,15 @@ router.put('/email',
     }
 });
 
-router.put('/active/:email',
+router.delete('/:id',
     authenticate,
     authorize,
     async (req,res)=>{
     try{
-        req.body.email = req.params.email;
-        let user = await userController.setUserActivate(req,res);
+        let user = await userController.deleteUser(req.params.id);
 
-        if(!user) return res.status(404).send('User Not Found..');
-        
-        res.status(200).send(user);
-    }catch(err){
-        console.log(err);
-        res.status(400).json(err.message);
-    }
-});
-
-router.put('/inactive/:email',
-    authenticate,
-    authorize,
-    async (req,res)=>{
-    try{
-        req.body.email = req.params.email;
-        let user = await userController.setUserInactivate(req,res);
-
-        if(!user) return res.status(404).send('User Not Found..');
-        
-        res.status(200).send(user);
-    }catch(err){
-        console.log(err);
-        res.status(400).json(err.message);
-    }
-});
-
-router.delete('/:email',
-    authenticate,
-    authorize,
-    async (req,res)=>{
-    try{
-        req.body.email = req.params.email;
-        let user = await userController.deleteUser(req,res);
-
-        if(!user) return res.status(404).send('User Not Found..');
+        if(typeof user === 'string') 
+            return res.status(404).send(user);
         
         res.status(200).send(user);
     }catch(err){

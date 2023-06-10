@@ -1,29 +1,63 @@
 const express = require('express');
 const router = express.Router();
 
-const Announcement = require("../models/announceModel");
 const authenticate = require('../middleware/authentication');
 const authorize = require('../middleware/authorization');
-const userConroller = require('../controllers/userController');
 
-router.get('/',
+const announceController = require('../controllers/announceController');
+const userController = require('../controllers/userController');
+const User = require('../models/userModel');
+
+router.get('/accessible',
         async (req,res)=>{
     try{
-        let userID ;
-        if(req.header("authToken") !== ''){
-           ({_id : userID} = await userConroller.getUserByToken(req.header("authToken")));
-        }
+        let userToken = req.header("authToken") ? req.header("authToken") : '';
+        let user = new User();
+        if(userToken)
+            user = await userController.getUserByToken( req.header("authToken") );
+        else
+            user.id = '0';
         
-        let announces = await Announcement.find({
-            $or: [ 
-                {privacy: 
-                    { $elemMatch: { userID } }
-                },
-                { allUsers: true }
-            ]
-        }).sort({
-            createdAt:-1
-        });
+        let announces = await announceController.getAllAccessibleAnnounce(user.id);
+
+        if(typeof announces === 'string') 
+            return res.status(400).send(announces);
+        
+        res.status(200).send(announces);
+    }catch(err){
+        console.log(err);
+        res.status(400).send(err.message);
+    }
+});
+
+router.get('/accessible/:id',
+        async (req,res)=>{
+    try{
+        let userToken = req.header("authToken") ? req.header("authToken") : '';
+        let user = new User();
+        if(userToken)
+            user = await userController.getUserByToken( req.header("authToken") );
+        else
+            user.id = '';
+        
+        let announce = await announceController.getAccessibleAnnounce(user.id, req.params.id);
+
+        if(typeof announce === 'string') 
+            return res.status(400).send(announce);
+        
+        res.status(200).send(announce);
+    }catch(err){
+        console.log(err);
+        res.status(400).send(err.message);
+    }
+});
+
+router.get('/',
+    async (req,res)=>{
+    try{
+        let announces = await announceController.getAllAnnounces();
+        if(typeof announces === 'string')
+            return res.status(400).json(announces);
         
         res.status(200).send(announces);
     }catch(err){
@@ -33,15 +67,12 @@ router.get('/',
 });
 
 router.get('/:id',
-        authenticate,
-        async (req,res)=>{
+    authenticate,
+    async (req,res)=>{
     try{
-        let {_id : userID} = await userConroller.getUserByToken();
-        let announce = await Announcement.findOne({
-            _id: req.params.id,
-            privacy: { $elemMatch: { userID } }
-        });
-        if(!announce) res.status(404).send("Not Found...");
+        let announce = await announceController.getAnnounce(req.params.id)
+        if(typeof announce === 'string')
+            return res.status(400).send(announce);
 
         res.status(200).send(announce);
     }catch(err){
@@ -55,13 +86,10 @@ router.post('/',
         authorize,
         async (req,res)=>{
     try{
-        let announce = new Announcement({
-            title: req.body.title,
-            content: req.body.content,
-            privacy: req.body.privacy
-        });
-        await announce.save();
-        
+        let announce = await announceController.addAnnounce(req.body)
+        if(typeof announce  === 'string') 
+            return res.status(400).send(announce);
+
         res.status(200).send(announce);
     }catch(err){
         console.log(err);
@@ -74,26 +102,14 @@ router.put('/:id',
         authorize,
         async (req,res)=>{
     try{
-        let announceOld = await Announcement.findOne({
-            _id: req.params.id          
-        });
-        if(!announceOld) return res.status(404).send('Announcement Not Found');
-        
-        await Announcement.updateOne({            
-            _id: req.params.id
-        },{
-            title: req.body.title ? req.body.title : announceOld.title,
-            content: req.body.content ? req.body.content : announceOld.content,
-            privacy: req.body.privacy ? req.body.privacy : announceOld.privacy            
-        });
+        let announce = await announceController.updateAnnounce(
+            req.params.id, 
+            req.body);
 
-        let announceNew = await Announcement.findOne({
-            _id: req.params.id          
-        });
+        if(typeof announce === 'string') 
+            return res.status(400).send(announce);
 
-        if(!announceNew) return res.status(404).send('Error while Update');
-
-        res.status(200).send(announceNew);
+        res.status(200).send(announce);
     }catch(err){
         console.log(err);
         res.status(400).send(err.message);
@@ -105,10 +121,9 @@ router.delete('/:id',
         authorize,
         async (req,res)=>{
     try{
-        let announce = await Announcement.findOneAndDelete({
-            _id: req.params.id
-        });
-        if(!announce) return res.status(404).send('Announcement Not Found');
+        let announce = await announceController.deleteAnnounce(req.params.id);
+        if(typeof announce === 'string') 
+            return res.status(400).send(announce);
 
         res.status(200).send(announce);
     }catch(err){

@@ -7,15 +7,17 @@ const authorize = require('../middleware/authorization');
 const Feedback = require("../models/feedbackModel");
 const User = require("../models/userModel");
 
+const feedbackController = require('../controllers/feedbackController');
+
 router.get('/',
     authenticate,
     authorize,
     async (req, res)=>{
     try{
-        let feedbacks = await Feedback.find().sort({
-            createdAt:1
-        });
-        
+        let feedbacks = await feedbackController.getAllFeedbacks();
+        if(typeof feedbacks === 'string')
+            res.status(400).json(feedbacks);
+
         res.status(200).send(feedbacks);
     }catch(err){
         console.log(err);
@@ -27,10 +29,9 @@ router.get('/:id',
     authenticate,
     async (req, res)=>{
     try{
-        let feedback = await Feedback.findOne({
-            _id: req.params.id
-        });
-        if(!feedback) return res.status(404).send('Feedback Not Found');
+        let feedback = await feedbackController.getFeedback(req.params.id)
+        if(typeof feedback === 'string')
+            return res.status(400).send(feedback);
         
         res.status(200).send(feedback);
     }catch(err){
@@ -44,23 +45,10 @@ router.post('/',
     authorize,
     async (req,res)=>{
     try{
-        let feedback = new Feedback({
-            userID: req.body.userID,
-            content: req.body.content
-        });
+        let feedback = await feedbackController.addFeedback(req.body);
+        if(typeof feedback  === 'string') 
+            return res.status(400).send(feedback);
 
-        let userCheck = await User.findOne({
-            _id: feedback.userID,
-        });
-        if(userCheck.feedbackID) return res.status(400).send('User Already Feedbacked');
-
-        await User.findOneAndUpdate({
-            _id: feedback.userID
-        },{
-            feedbackID: feedback.id
-        });
-        await feedback.save();
-        
         res.status(200).send(feedback);
     }catch(err){
         console.log(err);
@@ -73,24 +61,14 @@ router.put('/:id',
     authorize,
     async (req,res)=>{
     try{
-        let feedbackOld = await Feedback.findOne({
-            _id: req.params.id          
-        });
-        if(!feedbackOld) return res.status(404).send('Feedback Not Found');
+        const feedback = await feedbackController.updateFeedback(
+            req.params.id, 
+            req.body);
 
-        await Feedback.updateOne({            
-            _id: req.params.id
-        },{
-            content: req.body.content ? req.body.content : feedbackOld.content        
-        });
+        if(typeof feedback === 'string') 
+            return res.status(400).send(feedback);
 
-        let feedbackNew = await Feedback.findOne({
-            _id: req.params.id          
-        });
-
-        if(!feedbackNew) return res.status(404).send('Error while Update');
-
-        res.status(200).send(feedbackNew);
+        res.status(200).send(feedback);
     }catch(err){
         console.log(err);
         res.status(400).json(err.message);
@@ -102,16 +80,9 @@ router.delete('/:id',
     authorize,
     async (req, res)=>{
     try{
-        let feedback = await Feedback.findOneAndDelete({
-            _id: req.params.id
-        });
-        if(!feedback) return res.status(404).send('Feedback Not Found');
-
-        await User.findOneAndUpdate({
-            _id: feedback.userID
-        },{
-            feedbackID: null
-        })
+        let feedback = await feedbackController.deleteFeedback(req.params.id);
+        if(typeof feedback === 'string') 
+            return res.status(400).send(feedback);
 
         res.status(200).send(feedback);
     }catch(err){
