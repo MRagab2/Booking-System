@@ -120,6 +120,25 @@ router.put('/hide/:id',
     }
 });
 
+router.put('/:id', 
+    authenticate, 
+    authorize,
+    async(req,res)=>{
+    try{
+        const review = await reviewController.updateReview(
+            req.params.id, 
+            req.body);
+
+        if(typeof review  === 'string') 
+            return res.status(400).send(review);
+
+        res.status(200).send(review);
+    }catch(err){
+        console.log(err);
+        res.status(400).send(err.message);
+    }
+});
+
 router.delete('/:id',
     authenticate,
     async (req, res)=>{
