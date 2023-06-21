@@ -6,7 +6,12 @@ const reviewSchema = new mongoose.Schema({
         trim: true,
         required: true
     },
-    requestID: {
+    userName: {
+        type: String,
+        trim: true,
+        required: true
+    },
+    userAvatar: {
         type: String,
         trim: true,
         required: true

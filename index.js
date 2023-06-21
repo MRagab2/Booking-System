@@ -1,8 +1,11 @@
 // Packages
 const express = require('express');
 const helmet = require('helmet');
+const validator = require('validator');
 const cors = require('cors');
 const path = require('path');
+const fs = require('fs');
+const crypto = require('crypto');
 const app = express();
 app.use('/avatar', express.static(path.join(__dirname, 'public', 'avatar')));
 

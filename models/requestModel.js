@@ -35,11 +35,16 @@ const requestSchema = new mongoose.Schema({
         trim: true,
         required: true
     },
-    reviewID: {
+    userName: {
         type: String,
         trim: true,
-        default: null
-    }
+        required: true
+    },
+    userAvatar: {
+        type: String,
+        trim: true,
+        required: true
+    },
 
 },{timestamps: true});
 const Request = mongoose.model("requests",requestSchema);

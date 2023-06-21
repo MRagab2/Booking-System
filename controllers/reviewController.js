@@ -1,6 +1,5 @@
 const Review = require("../models/reviewModel");
 const User = require("../models/userModel");
-const Request = require("../models/requestModel");
 
 let addReview = async(reviewInfo)=>{
     try{
@@ -10,36 +9,23 @@ let addReview = async(reviewInfo)=>{
         if(!userCheck)
             return ('User Not Found');
 
-        let requestCheck = await Request.findOne({
-            _id: reviewInfo.requestID,
-        });
-        if(!requestCheck)
-            return ('Request Not Found');
-
         let reviewCheck = await Review.findOne({
-            $or:[
-                {userID: reviewInfo.userID},
-                {requestID: reviewInfo.requestID},
-            ]
+            userID: reviewInfo.userID
         });
 
-        if(requestCheck.reviewID || userCheck.reviewID || reviewCheck) 
-            return ('Request Already Reviewd');
+        if(userCheck.reviewID || reviewCheck) 
+            return ('User Already Reviewd');
         
         let review = new Review({
-            userID: reviewInfo.userID,
-            requestID: reviewInfo.requestID,
-            rate: reviewInfo.rate,
+            userID: userCheck.id,
+            userName: userCheck.fullName,
+            userAvatar: userCheck.avatar,
+            rate: reviewInfo.rate.toLowerCase(),
             content: reviewInfo.content
         });
 
         await User.findOneAndUpdate({
             _id: reviewInfo.userID
-        },{
-            reviewID: review.id
-        });
-        await Request.findOneAndUpdate({
-            _id: reviewInfo.requestID
         },{
             reviewID: review.id
         });
@@ -136,11 +122,6 @@ let deleteReview = async(id)=>{
 
         await User.findOneAndUpdate({
             _id: review.userID
-        },{
-            reviewID: null
-        });
-        await Request.findOneAndUpdate({
-            _id: review.requestID
         },{
             reviewID: null
         });

@@ -1,34 +1,48 @@
 const ClosedDate = require('../models/closeDatesModel');
 
 let addClosedDate = async (closeDateInfo)=>{
-    try{            
-        let closedDate = await ClosedDate.findOne({            
-            day: closeDateInfo.day
+    try{      
+        let checkDate = await ClosedDate.findOne({            
+            day: closeDateInfo.day,
+            time: { 
+                $elemMatch: { 
+                    startTime: closeDateInfo.time.startTime 
+                } 
+            }       
         });
-        if(!closedDate){
-            closedDate = new ClosedDate({
+
+        if(checkDate)
+            return ('The Date Already Closed');
+            
+        else{
+            let closedDate = await ClosedDate.findOne({            
                 day: closeDateInfo.day
             });
-            await closedDate.save();
-        }
-        await ClosedDate.updateOne({
-                day: closeDateInfo.day 
-            },
-            { 
-                $push: {
-                    time: {
-                        startTime: closeDateInfo.time.startTime, 
-                        endTime: closeDateInfo.time.endTime
-                    } 
-                } 
+            if(!closedDate){
+                closedDate = new ClosedDate({
+                    day: closeDateInfo.day
+                });
+                await closedDate.save();
             }
-        );
+            await ClosedDate.updateOne({
+                    day: closeDateInfo.day 
+                },
+                { 
+                    $push: {
+                        time: {
+                            startTime: closeDateInfo.time.startTime, 
+                            endTime: closeDateInfo.time.endTime
+                        } 
+                    } 
+                }
+            );
 
-        closedDate = await ClosedDate.findOne({            
-            day: closeDateInfo.day
-        });        
+            closedDate = await ClosedDate.findOne({            
+                day: closeDateInfo.day
+            });        
 
-        return closedDate;
+            return closedDate;
+        }
     }catch(err){
         console.log(err);
         return (err.message);
@@ -95,7 +109,7 @@ let getClosedDatebyDayAndTime = async (day, time)=> {
 let getAllClosedDates = async ()=> {
     try{
         const closedDates = await ClosedDate.find().sort({
-            createdAt:1
+            day:1
         });
 
         return closedDates;

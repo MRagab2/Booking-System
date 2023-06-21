@@ -1,37 +1,57 @@
 const Request = require("../models/requestModel");
 const User = require("../models/userModel");
+const { addClosedDate, deleteClosedDateTime } = require("./closedDatesController");
 
 
 let addRequest = async(requestInfo)=>{
     try{
-        let requestCheck = await Request.findOne({
-            userID: requestInfo.userID
-        });
-        if(requestCheck)
-            return ('Request Already Exist');
-            
-        requestCheck = await User.findOne({
+        let userCheck = await User.findOne({
             _id: requestInfo.userID
         });
-        if(requestCheck)
-            return ('Request Already Exist');
+        if(!userCheck)
+            return ('Uesr Not Found');
+           
+        if(userCheck.role == 'admin'){
+            requestInfo.price = 0;
+        }
+        else{
+            let requestCheck = await Request.findOne({
+                userID: requestInfo.userID
+            });
+            if(requestCheck)
+                return ('Request Already Exist');
+        }
+
+        const closedDate = await addClosedDate({
+            day: requestInfo.day,
+            time: {
+                startTime: requestInfo.startTime,
+                endTime: requestInfo.endTime
+            }
+        });
+        if(typeof closedDate === 'string')
+            return closedDate;
 
         const request = new Request({
-            day: requestInfo.day,
-            startTime: requestInfo.startTime,
-            endTime: requestInfo.endTime,
-            price: requestInfo.price,
-            couponID: requestInfo.couponID ? requestInfo.couponID : null,
-            userID: requestInfo.userID,
+            day : requestInfo.day,
+            startTime : requestInfo.startTime,
+            endTime : requestInfo.endTime,
+            price : requestInfo.price,
+            couponID : requestInfo.couponID ? requestInfo.couponID : null,
+            userID : userCheck.id,
+            userName : userCheck.fullName,
+            userAvatar : userCheck.avatar,
         });
+        
+        if(userCheck.role != 'admin')
+            await User.findOneAndUpdate({
+                _id: request.userID
+            },{
+                requestID: request.id
+            });
+        
+
         await request.save();
-
-        await User.findOneAndUpdate({
-            _id: request.userID
-        },{
-            requestID: request.id
-        });
-
         return request;
     }catch(err){
         console.log(err);
@@ -42,7 +62,7 @@ let addRequest = async(requestInfo)=>{
 let getAllRequests = async()=>{
     try{
         const requests = await Request.find().sort({
-            createdAt:1
+            day:1
         });
 
         return requests;
@@ -84,7 +104,6 @@ let updateRequest = async(oldID, newInfo)=>{
             price: newInfo.price ? newInfo.price : requestOld.price,
             couponID: newInfo.couponID ? newInfo.couponID : requestOld.couponID,
             status: newInfo.status ? newInfo.status : requestOld.status,
-            reviewID: newInfo.reviewID ? newInfo.reviewID : requestOld.reviewID
         });
 
         let requestNew = await Request.findOne({
@@ -102,11 +121,22 @@ let updateRequest = async(oldID, newInfo)=>{
 
 let deleteRequest = async(id)=>{
     try{
-        let request = await Request.findOneAndDelete({
+        let request = await Request.findOne({
             _id: id
         });
         if(!request) 
             return ('Request Not Found');
+
+        const closedDate = await deleteClosedDateTime(
+            request.day, 
+            request.startTime
+        );
+        if(typeof closedDate === 'string')
+            return closedDate;
+
+        request = await Request.findOneAndDelete({
+            _id: id
+        });
 
         await User.findOneAndUpdate({
             _id: request.userID

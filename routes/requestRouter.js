@@ -15,7 +15,24 @@ router.get('/',
         if(typeof requests === 'string') 
             return res.status(404).send(requests);
 
-        res.status(200).send(requests);
+        let Requests = new Array();
+        requests.map(request =>{
+            let Request = {
+                id : request.id,
+                day : request.day,
+                startTime : request.startTime,
+                endTime : request.endTime,
+                price : request.price,
+                couponID : request.couponID,
+                status : request.status,
+                userID : request.userID,
+                userName : request.userName,
+                userAvatar : `${req.protocol}://${req.get('host')}/avatar/${request.userAvatar}`,
+                createdAt: request.createdAt,
+            };
+            Requests.push(Request);
+        });
+        res.status(200).send(Requests);
     }catch(err){
             console.log(err);
             res.status(400).send(err.message);
@@ -30,7 +47,20 @@ router.get('/:id',
         if(typeof request  === 'string') 
             return res.status(404).send(request);
 
-        res.status(200).send(request);
+        let Request = {
+            id : request.id,
+            day : request.day,
+            startTime : request.startTime,
+            endTime : request.endTime,
+            price : request.price,
+            couponID : request.couponID,
+            status : request.status,
+            userID : request.userID,
+            userName : request.userName,
+            userAvatar : `${req.protocol}://${req.get('host')}/avatar/${request.userAvatar}`,
+            createdAt: request.createdAt,
+        };
+        res.status(200).send(Request);
     }catch(err){
         console.log(err);
         res.status(400).send(err.message);

@@ -2,6 +2,8 @@ const User = require("../models/userModel");
 const crypto = require('crypto');
 const bcrypt = require('bcrypt');
 const fs = require('fs');
+const Review = require("../models/reviewModel");
+const Request = require("../models/requestModel");
 
 let addUser = async (userInfo)=>{
     try{
@@ -103,6 +105,14 @@ let updateUser = async (oldID, newInfo, newAvatar)=> {
             fs.unlinkSync('public/avatar/' + userOld.avatar);
         }
 
+        let status = userOld.status;
+        if(newInfo.status){
+            if(newInfo.status == 'active')
+                status = 'inactive';
+            else
+                status = 'active'
+        }
+
         await User.updateOne({            
             _id: oldID          
         },{
@@ -110,7 +120,7 @@ let updateUser = async (oldID, newInfo, newAvatar)=> {
             email: newInfo.email ? newInfo.email : userOld.email,
             phone: newInfo.phone ? newInfo.phone : userOld.phone,
             avatar: avatar,
-            status: newInfo.status ? newInfo.status : userOld.status,
+            status: status,
             requestID: newInfo.requestID ? newInfo.requestID : userOld.requestID,
             reviewID: newInfo.reviewID ? newInfo.reviewID : userOld.reviewID,
             feedbackID: newInfo.feedbackID ? newInfo.feedbackID : userOld.feedbackID
@@ -130,6 +140,21 @@ let updateUser = async (oldID, newInfo, newAvatar)=> {
             }
         }        
 
+        if(newInfo.fullName || newAvatar){
+            await Review.updateOne({            
+                userID: oldID          
+            },{
+                userName: newInfo.fullName ? newInfo.fullName : userOld.fullName,
+                userAvatar: avatar,
+            });
+            await Request.updateOne({            
+                userID: oldID          
+            },{
+                userName: newInfo.fullName ? newInfo.fullName : userOld.fullName,
+                userAvatar: avatar,
+            });
+        }
+
         let userNew = await User.findOne({
             _id: oldID          
         });
@@ -148,9 +173,9 @@ let deleteUser = async (id)=>{
         let user = await User.findOneAndDelete({
             _id: id
         });
-
         if(!user) 
             return ('User Not Found');
+        
 
         fs.unlinkSync('public/avatar/' + user.avatar);
         return user;

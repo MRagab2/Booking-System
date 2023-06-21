@@ -20,6 +20,30 @@ router.get('/',
     }
 });
 
+router.get('/calender',
+    async (req,res)=>{
+    try{   
+        let closedDates = await closedDatesController.getAllClosedDates();
+        if(typeof closedDates === 'string')
+            return res.status(400).json(closedDates);
+        
+        let calendarDates = new Array();
+        closedDates.map(closedDate =>{
+            closedDate.time.map(oneTime=>{
+                let calendarDate={
+                    start:`${closedDate.day}T${oneTime.startTime}:00`,
+                    end:`${closedDate.day}T${oneTime.endTime}:00`
+                }
+                calendarDates.push(calendarDate);
+            })
+        })
+        res.status(200).send(calendarDates);
+    }catch(err){
+        console.log(err);
+        res.status(400).send(err.message);
+    }
+});
+
 router.get('/day/:day',
     async (req,res)=>{
     try{
