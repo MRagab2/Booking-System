@@ -3,9 +3,10 @@ const router = express.Router();
 
 const authenticate = require('../middleware/authentication');
 const authorize = require('../middleware/authorization');
-const upload = require('../middleware/uploadAvatar');
+const handleBase64ImageUpload = require('../middleware/uploadAvatar');
 
 const userController = require('../controllers/userController');
+const upload = require('../middleware/uploadAvatar');
 
 router.get('/',
     authenticate,
