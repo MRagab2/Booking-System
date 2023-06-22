@@ -44,7 +44,6 @@ router.get('/',
 });
 
 router.get('/email/:email',
-    authenticate,
     async (req,res)=>{
     try{
         let user = await userController.getUserByEmail(req.params.email);
@@ -74,7 +73,6 @@ router.get('/email/:email',
     }
 });
 router.get('/id/:id',
-    authenticate,
     async (req,res)=>{
     try{
         let user = await userController.getUserByID(req.params.id);
