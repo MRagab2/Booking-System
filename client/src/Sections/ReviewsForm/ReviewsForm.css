@@ -1,0 +1,15 @@
+.row-form-reviews {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.form-reviews {
+    width: 50%;
+}
+
+.te {
+    min-height: 150px !important;
+    color: black !important;
+}

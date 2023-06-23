@@ -1,0 +1,37 @@
+.section-title {
+    font-size: calc(20px + (30 - 20) * ((100vw - 320px) / (1200 - 320)));
+}
+
+@media (min-width: 992px) {
+    .section-title {
+        font-size: 30px;
+    }
+}
+
+.text-left {
+    text-align: left !important;
+}
+
+.card .post-details {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    max-width: 250px;
+    margin-bottom: 15px;
+}
+
+.card .post-details a {
+    opacity: .6;
+    color: #444;
+    font-size: 15px;
+    text-decoration: none;
+}
+
+.card .post-details a i {
+    padding-right: 5px;
+}

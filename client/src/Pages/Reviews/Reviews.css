@@ -1,0 +1,13 @@
+.reviews .carousel-control-prev,
+.carousel-control-next {
+    background-color: #3a4053;
+}
+
+.reviews .carousel-control-next,
+.carousel-control-prev {
+    background-color: #3a4053;
+}
+
+.reviews .carousel-indicators [data-bs-target] {
+    background-color: #3a4053 !important;
+}

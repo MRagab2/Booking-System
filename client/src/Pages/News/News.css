@@ -1,0 +1,88 @@
+.grid-margin-news {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.card-news-2 {
+    width: 72%;
+}
+
+.form-news {
+    width: 100%;
+}
+
+.form-news .form .label-news {
+    justify-content: start;
+    font-size: 20px;
+}
+
+.form-news .form button {
+    margin: 0;
+    width: 30%;
+    background-color: #ff7a57;
+}
+
+.form-news .form button:hover {
+    background-color: #d65434;
+}
+
+.form-news .form input[placeholder="Title"] {
+    padding: 25px 10px;
+    font-size: 30px;
+    color: White;
+}
+
+.form-news .form textarea[placeholder="Content"] {
+    color: White;
+}
+
+.privacy-con {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.searchWrapper,
+.select-discount {
+    border-radius: 4px;
+    min-height: 48px;
+    padding: 10px;
+    position: relative;
+    background: #2A3038;
+    border: #2c2e33 !important;
+    color: white;
+}
+
+.btn-privacy {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.action-green {
+    background-color: green;
+    border: 1px solid green;
+}
+
+.action-green:hover {
+    background-color: rgb(7, 86, 7);
+    border: 1px solid rgb(7, 86, 7);
+}
+
+@media (max-width: 991px) {
+    .form-news .form input[placeholder="Title"] {
+        padding: 25px 10px;
+        font-size: 20px;
+        color: White;
+    }
+
+    .privacy-con {
+        display: block;
+    }
+
+    .form-news .form button {
+        width: 150px !important;
+    }
+}

@@ -1,0 +1,40 @@
+.footer {
+    background-color: #ff7a57;
+    height: 130px;
+    padding: 50px;
+}
+
+.row-footer {
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.row-footer p {
+    font-size: 25px;
+    color: white;
+}
+
+.row-footer p a {
+    color: white;
+}
+
+.icon-con {
+    display: flex;
+    justify-content: end;
+}
+
+.icon-con span {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 25px;
+    width: 50px;
+    height: 50px;
+    margin-right: 20px;
+    border: 2px solid white;
+    border-radius: 100%;
+    cursor: pointer;
+}

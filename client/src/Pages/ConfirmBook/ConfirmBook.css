@@ -1,0 +1,96 @@
+.txt-center {
+    text-align: center;
+}
+
+.icon {
+    background-color: white;
+    padding: 10px;
+    color: rgb(67, 67, 251);
+    border-radius: 100%;
+}
+
+.hide {
+    display: none;
+}
+
+.clear {
+    float: none;
+    clear: both;
+}
+
+.rating {
+    width: 90px;
+    unicode-bidi: bidi-override;
+    direction: rtl;
+    text-align: center;
+    position: relative;
+}
+
+.rating>label {
+    float: right;
+    display: inline;
+    padding: 0;
+    margin: 0;
+    position: relative;
+    width: 1.1em;
+    cursor: pointer;
+    color: #000;
+
+}
+
+.rating>label:hover,
+.rating>label:hover~label,
+.rating>input.radio-btn:checked~label {
+    color: transparent;
+}
+
+.rating>label:hover:before,
+.rating>label:hover~label:before,
+.rating>input.radio-btn:checked~label:before,
+.rating>input.radio-btn:checked~label:before {
+    content: "\2605";
+    position: absolute;
+    left: 0;
+    color: #FFD700;
+}
+
+.checked {
+    color: orange;
+}
+
+.ref-row input {
+    background-color: white;
+    color: #000;
+    border: 1px solid white;
+}
+
+.ref-row input:focus {
+    background-color: white;
+    color: #000;
+    border: 1px solid white;
+}
+
+.ref-row .form-check .form-check-label {
+    display: inline !important;
+    font-size: 1rem;
+    line-height: 1.5;
+    color: black;
+}
+
+.ref-row .form-check {
+    margin-top: 20px;
+
+}
+
+.form-check-input:focus[type="radio"] {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+
+.check-box-con {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}

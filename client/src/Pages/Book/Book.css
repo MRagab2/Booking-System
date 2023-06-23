@@ -1,0 +1,79 @@
+.con-cal {
+    height: 950px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.form-i {
+    background-color: white !important;
+}
+
+
+.contact-con {
+    height: 60%;
+    background-color: #ff7a57;
+}
+
+.form-book label {
+    font-size: 20px;
+    text-align: left;
+}
+
+.form-con h2 {
+    text-align: center;
+    color: white;
+    font-weight: bold;
+}
+
+.col-btn-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn-back {
+    padding: 10px 30px;
+    background-color: antiquewhite;
+    border: none;
+    color: black;
+}
+
+.btn-book {
+    padding: 10px 30px;
+}
+
+.btn-book:hover {
+    background-color: antiquewhite;
+    border: 1px solid antiquewhite;
+    color: black;
+}
+
+@media (max-width: 991.98px) {
+    .col-calendar {
+        margin-bottom: 50px;
+    }
+
+    .fc .fc-button-primary:disabled {
+        margin-bottom: 10px;
+        margin-top: 30px;
+    }
+
+    .fc-toolbar-chunk {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        margin-right: 30px;
+        align-items: baseline;
+    }
+
+    .fc .fc-toolbar-title {
+        font-size: 1.2em;
+    }
+
+    .contact-con {
+        height: 100%;
+        margin: 30px;
+        background-color: #ff7a57;
+    }
+}

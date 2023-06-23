@@ -1,0 +1,39 @@
+.section {
+    position: relative;
+    padding: 5rem 0;
+}
+
+.section:nth-child(even) {
+    background: white;
+}
+
+#about {
+    padding: 100px;
+}
+
+.col-about-text {
+    text-align: left;
+}
+
+
+
+@media (max-width: 991.98px) {
+    #about {
+        padding: 5px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .col-about-text {
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+
+
+}

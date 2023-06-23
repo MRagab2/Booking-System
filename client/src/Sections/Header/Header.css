@@ -1,0 +1,33 @@
+.navbar-e {
+    padding: 30px;
+}
+
+.navbar-e .navbar-bra {
+    color: #ff7a57;
+}
+
+.navbar-e .nav-e .a {
+    transition: all 0.1s ease-in;
+}
+
+.navbar-e .nav-e .a,
+#nav-dropdown {
+    font-size: 18px !important;
+}
+
+.navbar-e .nav-e .a:active {
+    color: #ff7a57 !important;
+}
+
+.navbar-e .nav-e .a:hover {
+    color: #ff7a57 !important;
+}
+
+.nav-link.active {
+    color: #ff7a57 !important;
+    border-bottom: 1px solid #ff7a57 !important;
+}
+
+a {
+    text-decoration: none;
+}

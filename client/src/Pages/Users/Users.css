@@ -1,0 +1,10 @@
+.actions-btn {
+    font-size: 13px;
+
+}
+
+.td-con {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

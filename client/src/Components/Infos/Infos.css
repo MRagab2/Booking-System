@@ -1,0 +1,41 @@
+.header .container .infos {
+    margin-top: 120px;
+}
+
+.header .container .infos .subtitle {
+    margin-bottom: 0;
+    font-size: 25px;
+    font-weight: 500;
+}
+
+.header .container .infos .title {
+    margin-bottom: 0px;
+    font-size: 74px;
+    font-weight: bold;
+}
+
+.header .container .infos p {
+    margin-top: -5px;
+    font-size: 22px;
+}
+
+.header .container .infos .btn {
+    display: inline-block;
+    margin: 0 2px;
+}
+
+@media (max-width: 991.98px) {
+    .header .container .infos {
+        margin-top: 0;
+    }
+
+    .header .container .infos .subtitle {
+        font-size: 17px;
+    }
+
+    .header .container .infos .title {
+        margin-bottom: 0px;
+        font-size: 50px;
+        font-weight: bold;
+    }
+}

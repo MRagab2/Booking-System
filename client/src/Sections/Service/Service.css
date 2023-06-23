@@ -1,0 +1,9 @@
+.section-title {
+    font-size: calc(20px + (30 - 20) * ((100vw - 320px) / (1200 - 320)));
+}
+
+@media (min-width: 992px) {
+    .section-title {
+        font-size: 30px;
+    }
+}
